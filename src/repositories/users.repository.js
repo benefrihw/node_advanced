@@ -6,5 +6,23 @@ export class AuthRepository {
             where: { id: +userId },
         });
         return user;
+    };
+
+    findUnique = async (email) => {
+        const existedUser = await prisma.user.findUnique({
+            where: { email },
+        });
+        return existedUser;
     }
+
+    createUser = async (email, password, name) => {
+        const createdUser = await prisma.user.create({
+            data: {
+                email,
+                password,
+                name,
+            },
+        });
+        return createdUser;
+    };
 }

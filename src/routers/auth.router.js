@@ -11,44 +11,51 @@ import {
   HASH_SALT_ROUNDS,
 } from '../constants/auth.constant.js';
 import { ACCESS_TOKEN_SECRET } from '../constants/env.constant.js';
+import { AuthController } from '../controllers/auth.controller.js';
 
 const authRouter = express.Router();
 
-authRouter.post('/sign-up', signUpValidator, async (req, res, next) => {
-  try {
-    const { email, password, name } = req.body;
+// AuthController의 인스턴스 생성
+const authController = new AuthController();
 
-    const existedUser = await prisma.user.findUnique({ where: { email } });
+/** 회원가입 API */
+authRouter.post('/sign-up', signUpValidator, authController.signUpUser);
 
-    // 이메일이 중복된 경우
-    if (existedUser) {
-      return res.status(HTTP_STATUS.CONFLICT).json({
-        status: HTTP_STATUS.CONFLICT,
-        message: MESSAGES.AUTH.COMMON.EMAIL.DUPLICATED,
-      });
-    }
+// authRouter.post('/sign-up', signUpValidator, async (req, res, next) => {
+//   try {
+//     const { email, password, name } = req.body;
 
-    const hashedPassword = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
+//     const existedUser = await prisma.user.findUnique({ where: { email } });
 
-    const data = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-      },
-    });
+//     // 이메일이 중복된 경우
+//     if (existedUser) {
+//       return res.status(HTTP_STATUS.CONFLICT).json({
+//         status: HTTP_STATUS.CONFLICT,
+//         message: MESSAGES.AUTH.COMMON.EMAIL.DUPLICATED,
+//       });
+//     }
 
-    data.password = undefined;
+//     const hashedPassword = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
 
-    return res.status(HTTP_STATUS.CREATED).json({
-      status: HTTP_STATUS.CREATED,
-      message: MESSAGES.AUTH.SIGN_UP.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//     const data = await prisma.user.create({
+//       data: {
+//         email,
+//         password: hashedPassword,
+//         name,
+//       },
+//     });
+
+//     data.password = undefined;
+
+//     return res.status(HTTP_STATUS.CREATED).json({
+//       status: HTTP_STATUS.CREATED,
+//       message: MESSAGES.AUTH.SIGN_UP.SUCCEED,
+//       data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 authRouter.post('/sign-in', signInValidator, async (req, res, next) => {
   try {
