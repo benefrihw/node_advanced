@@ -19,4 +19,20 @@ export class AuthController {
             next (error);
         };
     };
+
+    signInUser = async (req, res, next) => {
+        try {
+            const { email, password } = req.body;
+
+            const user = await this.authService.findUser(
+                email,
+                password,
+            );
+
+            return res.status(200).json({ data: user });
+
+        } catch (error) {
+            next (error);
+        };
+    };
 }
