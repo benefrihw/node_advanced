@@ -4,33 +4,39 @@ import { MESSAGES } from '../constants/message.constant.js';
 import { createResumeValidator } from '../middlewares/validators/create-resume-validator.middleware.js';
 import { prisma } from '../utils/prisma.util.js';
 import { updateResumeValidator } from '../middlewares/validators/updated-resume-validator.middleware.js';
+import { ResumeController } from '../controllers/resumes.controller.js';
 
 const resumesRouter = express.Router();
 
-// 이력서 생성
-resumesRouter.post('/', createResumeValidator, async (req, res, next) => {
-  try {
-    const user = req.user;
-    const { title, content } = req.body;
-    const authorId = user.id;
+// resumeController의 인스턴스 생성
+const resumeController = new ResumeController();
 
-    const data = await prisma.resume.create({
-      data: {
-        authorId,
-        title,
-        content,
-      },
-    });
+/** 이력서 생성 API */
+resumesRouter.post('/', createResumeValidator, resumeController.createResume);
 
-    return res.status(HTTP_STATUS.CREATED).json({
-      status: HTTP_STATUS.CREATED,
-      message: MESSAGES.RESUMES.CREATE.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+// resumesRouter.post('/', createResumeValidator, async (req, res, next) => {
+//   try {
+//     const user = req.user;
+//     const { title, content } = req.body;
+//     const authorId = user.id;
+
+//     const data = await prisma.resume.create({
+//       data: {
+//         authorId,
+//         title,
+//         content,
+//       },
+//     });
+
+//     return res.status(HTTP_STATUS.CREATED).json({
+//       status: HTTP_STATUS.CREATED,
+//       message: MESSAGES.RESUMES.CREATE.SUCCEED,
+//       data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // 이력서 목록 조회
 resumesRouter.get('/', async (req, res, next) => {
