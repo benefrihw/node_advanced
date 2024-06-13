@@ -65,7 +65,41 @@ export class ResumeService {
 
     return {
       status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+      message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
+      id: resume.id,
+      authorId: resume.authorId,
+      title: resume.title,
+      content: resume.content,
+      status: resume.status,
+      createdAt: resume.createdAt,
+      updatedAt: resume.updatedAt,
+    };
+  };
+
+  updateResume = async (authorId, id, title, content) => {
+    const resume = await this.resumeRepository.updateResume(
+      authorId,
+      id,
+      title,
+      content,
+    );
+    if (!resume) {
+      return {
+        status: HTTP_STATUS.NOT_FOUND,
+        message: MESSAGES.RESUMES.NOT_FOUND,
+      };
+    }
+
+    if (!title && !content) {
+      return {
+        status: HTTP_STATUS.BAD_REQUEST,
+        message: MESSAGES.RESUMES.UPDATE.NO_BODY_DATA,
+      };
+    }
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: MESSAGES.RESUMES.UPDATE.SUCCEED,
       id: resume.id,
       authorId: resume.authorId,
       title: resume.title,

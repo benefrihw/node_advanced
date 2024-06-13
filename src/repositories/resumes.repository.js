@@ -32,4 +32,18 @@ export class ResumeRepository {
     });
     return resume;
   };
-}
+
+  updateResume = async (authorId, id, title, content) => {
+    const updatedResume = await prisma.resume.update({
+        where: {
+            authorId: +authorId,
+            id: +id,
+        },
+            data: {
+            title,
+            content,            
+        },
+    });
+    return updatedResume;
+    };
+  }

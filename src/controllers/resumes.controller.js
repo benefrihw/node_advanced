@@ -47,4 +47,24 @@ export class ResumeController {
       next(error);
     }
   };
+
+  updateResume = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const authorId = user.id;
+        const { id } = req.params;
+        const { title, content } = req.body;
+
+        const resume = await this.resumeService.updateResume(
+            authorId,
+            id,
+            title,
+            content,
+        );
+
+        return res.status(200).json({ data: resume });
+    } catch (error) {
+        next (error);
+    };
+  };
 }

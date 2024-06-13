@@ -128,44 +128,46 @@ resumesRouter.get('/:id', resumeController.getResumeById);
 //   }
 // });
 
-// 이력서 수정
-resumesRouter.put('/:id', updateResumeValidator, async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+/** 이력서 수정 API */
+resumesRouter.put('/:id', updateResumeValidator, resumeController.updateResume);
 
-    const { id } = req.params;
+// resumesRouter.put('/:id', updateResumeValidator, async (req, res, next) => {
+//   try {
+//     const user = req.user;
+//     const authorId = user.id;
 
-    const { title, content } = req.body;
+//     const { id } = req.params;
 
-    let existedResume = await prisma.resume.findUnique({
-      where: { id: +id, authorId },
-    });
+//     const { title, content } = req.body;
 
-    if (!existedResume) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({
-        status: HTTP_STATUS.NOT_FOUND,
-        message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-      });
-    }
+//     let existedResume = await prisma.resume.findUnique({
+//       where: { id: +id, authorId },
+//     });
 
-    const data = await prisma.resume.update({
-      where: { id: +id, authorId },
-      data: {
-        ...(title && { title }),
-        ...(content && { content }),
-      },
-    });
+//     if (!existedResume) {
+//       return res.status(HTTP_STATUS.NOT_FOUND).json({
+//         status: HTTP_STATUS.NOT_FOUND,
+//         message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
+//       });
+//     }
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.UPDATE.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//     const data = await prisma.resume.update({
+//       where: { id: +id, authorId },
+//       data: {
+//         ...(title && { title }),
+//         ...(content && { content }),
+//       },
+//     });
+
+//     return res.status(HTTP_STATUS.OK).json({
+//       status: HTTP_STATUS.OK,
+//       message: MESSAGES.RESUMES.UPDATE.SUCCEED,
+//       data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // 이력서 삭제
 resumesRouter.delete('/:id', async (req, res, next) => {
