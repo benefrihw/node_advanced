@@ -7,6 +7,7 @@ import { updateResumeValidator } from '../middlewares/validators/updated-resume-
 export class ResumeService {
   resumeRepository = new ResumeRepository();
 
+  // 이력서 생성
   createResume = async (authorId, title, content) => {
     const createdUser = await this.resumeRepository.createResume(
       authorId,
@@ -26,6 +27,7 @@ export class ResumeService {
     };
   };
 
+  // 이력서 목록 조회
   findAllResumes = async (authorId) => {
     const resumes = await this.resumeRepository.findAllResumes(authorId);
     if (!resumes) {
@@ -54,6 +56,7 @@ export class ResumeService {
     });
   };
 
+  // 이력서 상세조회
   findResumeById = async (authorId, id) => {
     const resume = await this.resumeRepository.findResumeById(authorId, id);
     if (!resume) {
@@ -76,6 +79,7 @@ export class ResumeService {
     };
   };
 
+  // 이력서 수정
   updateResume = async (authorId, id, title, content) => {
     const resume = await this.resumeRepository.updateResume(
       authorId,
@@ -110,22 +114,20 @@ export class ResumeService {
     };
   };
 
+  // 이력서 삭제
   deleteResume = async (authorId, id) => {
-    const resume = await this.resumeRepository.deleteResume(
-        authorId,
-        id,
-    );
+    const resume = await this.resumeRepository.deleteResume(authorId, id);
     if (!resume) {
-        return {
-          status: HTTP_STATUS.NOT_FOUND,
-          message: MESSAGES.RESUMES.NOT_FOUND,
-        };
-      };
-
       return {
-        status: HTTP_STATUS.OK,
-        message: MESSAGES.RESUMES.DELETE.SUCCEED,
-        id: resume.id,
+        status: HTTP_STATUS.NOT_FOUND,
+        message: MESSAGES.RESUMES.NOT_FOUND,
       };
+    }
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: MESSAGES.RESUMES.DELETE.SUCCEED,
+      id: resume.id,
+    };
   };
 }
