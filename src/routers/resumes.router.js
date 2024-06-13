@@ -86,45 +86,47 @@ resumesRouter.get('/', resumeController.getResumes);
 //   }
 // });
 
-// 이력서 상세 조회
-resumesRouter.get('/:id', async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+/** 이력서 상세조회 API */
+resumesRouter.get('/:id', resumeController.getResumeById);
 
-    const { id } = req.params;
+// resumesRouter.get('/:id', async (req, res, next) => {
+//   try {
+//     const user = req.user;
+//     const authorId = user.id;
 
-    let data = await prisma.resume.findUnique({
-      where: { id: +id, authorId },
-      include: { author: true },
-    });
+//     const { id } = req.params;
 
-    if (!data) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({
-        status: HTTP_STATUS.NOT_FOUND,
-        message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-      });
-    }
+//     let data = await prisma.resume.findUnique({
+//       where: { id: +id, authorId },
+//       include: { author: true },
+//     });
 
-    data = {
-      id: data.id,
-      authorName: data.author.name,
-      title: data.title,
-      content: data.content,
-      status: data.status,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    };
+//     if (!data) {
+//       return res.status(HTTP_STATUS.NOT_FOUND).json({
+//         status: HTTP_STATUS.NOT_FOUND,
+//         message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
+//       });
+//     }
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//     data = {
+//       id: data.id,
+//       authorName: data.author.name,
+//       title: data.title,
+//       content: data.content,
+//       status: data.status,
+//       createdAt: data.createdAt,
+//       updatedAt: data.updatedAt,
+//     };
+
+//     return res.status(HTTP_STATUS.OK).json({
+//       status: HTTP_STATUS.OK,
+//       message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
+//       data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // 이력서 수정
 resumesRouter.put('/:id', updateResumeValidator, async (req, res, next) => {

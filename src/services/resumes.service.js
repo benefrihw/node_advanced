@@ -53,4 +53,26 @@ export class ResumeService {
       };
     });
   };
+
+  findResumeById = async (authorId, id) => {
+    const resume = await this.resumeRepository.findResumeById(authorId, id);
+    if (!resume) {
+      return {
+        status: HTTP_STATUS.NOT_FOUND,
+        message: MESSAGES.RESUMES.NOT_FOUND,
+      };
+    }
+
+    return {
+      status: HTTP_STATUS.OK,
+      message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+      id: resume.id,
+      authorId: resume.authorId,
+      title: resume.title,
+      content: resume.content,
+      status: resume.status,
+      createdAt: resume.createdAt,
+      updatedAt: resume.updatedAt,
+    };
+  };
 }
