@@ -1,8 +1,6 @@
 import { ResumeRepository } from '../repositories/resumes.repository.js';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
-import { createResumeValidator } from '../middlewares/validators/create-resume-validator.middleware.js';
-import { updateResumeValidator } from '../middlewares/validators/updated-resume-validator.middleware.js';
 
 export class ResumeService {
   resumeRepository = new ResumeRepository();
@@ -14,17 +12,7 @@ export class ResumeService {
       title,
       content,
     );
-    return {
-      status: HTTP_STATUS.CREATED,
-      message: MESSAGES.RESUMES.CREATE.SUCCEED,
-      id: createdUser.id,
-      authorId: createdUser.authorId,
-      title: createdUser.title,
-      content: createdUser.content,
-      status: createdUser.status,
-      createdAt: createdUser.createdAt,
-      updatedAt: createdUser.updatedAt,
-    };
+    return createdUser;
   };
 
   // 이력서 목록 조회
@@ -34,26 +22,14 @@ export class ResumeService {
       return {
         status: HTTP_STATUS.NOT_FOUND,
         message: MESSAGES.RESUMES.NOT_FOUND,
+        date: [],
       };
     }
 
     resumes.sort((a, b) => {
       return b.createdAt - a.createdAt;
     });
-
-    return resumes.map((resume) => {
-      return {
-        status: HTTP_STATUS.OK,
-        message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
-        id: resume.id,
-        authorId: resume.authorId,
-        title: resume.title,
-        content: resume.content,
-        status: resume.status,
-        createdAt: resume.createdAt,
-        updatedAt: resume.updatedAt,
-      };
-    });
+    return resumes;
   };
 
   // 이력서 상세조회
@@ -65,18 +41,7 @@ export class ResumeService {
         message: MESSAGES.RESUMES.NOT_FOUND,
       };
     }
-
-    return {
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
-      id: resume.id,
-      authorId: resume.authorId,
-      title: resume.title,
-      content: resume.content,
-      status: resume.status,
-      createdAt: resume.createdAt,
-      updatedAt: resume.updatedAt,
-    };
+    return resume;
   };
 
   // 이력서 수정
@@ -101,17 +66,7 @@ export class ResumeService {
       };
     }
 
-    return {
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.UPDATE.SUCCEED,
-      id: resume.id,
-      authorId: resume.authorId,
-      title: resume.title,
-      content: resume.content,
-      status: resume.status,
-      createdAt: resume.createdAt,
-      updatedAt: resume.updatedAt,
-    };
+    return resume;
   };
 
   // 이력서 삭제
@@ -124,10 +79,6 @@ export class ResumeService {
       };
     }
 
-    return {
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.DELETE.SUCCEED,
-      id: resume.id,
-    };
+    return { id: resume.id };
   };
 }

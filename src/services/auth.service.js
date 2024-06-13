@@ -13,16 +13,7 @@ export class AuthService {
   findUserById = async (userId) => {
     const user = await this.authRepository.findUserById(userId);
 
-    return {
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.USERS.READ_ME.SUCCEED,
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
+    return user;
   };
 
   // 회원가입
@@ -36,19 +27,10 @@ export class AuthService {
     }
     const createdUser = await this.authRepository.createUser(
       email,
-      name,
       password,
+      name,
     );
-    return {
-      status: HTTP_STATUS.CREATED,
-      message: MESSAGES.AUTH.SIGN_UP.SUCCEED,
-      id: createdUser.id,
-      email: createdUser.email,
-      name: createdUser.name,
-      role: createdUser.role,
-      createdAt: createdUser.createdAt,
-      updatedAt: createdUser.updatedAt,
-    };
+    return createdUser;
   };
 
   // 로그인
@@ -69,10 +51,6 @@ export class AuthService {
     const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
       expiresIn: ACCESS_TOKEN_EXPIRES_IN,
     });
-    return {
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.AUTH.SIGN_IN.SUCCEED,
-      accessToken,
-    };
+    return { accessToken: accessToken }
   };
 }

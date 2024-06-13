@@ -1,4 +1,6 @@
 import { ResumeService } from '../services/resumes.service.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
+import { MESSAGES } from '../constants/message.constant.js';
 
 export class ResumeController {
   resumeService = new ResumeService();
@@ -16,7 +18,11 @@ export class ResumeController {
         content,
       );
 
-      return res.status(200).json({ data: resume });
+      return res.status(200).json({
+        status: HTTP_STATUS.CREATED,
+        message: MESSAGES.RESUMES.CREATE.SUCCEED,
+        data: resume,
+      });
     } catch (error) {
       next(error);
     }
@@ -30,7 +36,11 @@ export class ResumeController {
 
       const resumes = await this.resumeService.findAllResumes(authorId);
 
-      return res.status(200).json({ data: resumes });
+      return res.status(200).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+        data: resumes,
+      });
     } catch (error) {
       next(error);
     }
@@ -45,7 +55,11 @@ export class ResumeController {
 
       const resume = await this.resumeService.findResumeById(authorId, id);
 
-      return res.status(200).json({ data: resume });
+      return res.status(200).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
+        data: resume,
+      });
     } catch (error) {
       next(error);
     }
@@ -66,7 +80,11 @@ export class ResumeController {
         content,
       );
 
-      return res.status(200).json({ data: resume });
+      return res.status(200).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.UPDATE.SUCCEED,
+        data: resume,
+      });
     } catch (error) {
       next(error);
     }
@@ -81,7 +99,11 @@ export class ResumeController {
 
       const resume = await this.resumeService.deleteResume(authorId, id);
 
-      return res.status(200).json({ data: resume });
+      return res.status(200).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.DELETE.SUCCEED,
+        data: resume,
+      });
     } catch (error) {
       next(error);
     }

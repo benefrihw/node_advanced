@@ -1,4 +1,6 @@
 import { AuthService } from '../services/auth.service.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
+import { MESSAGES } from '../constants/message.constant.js';
 
 export class UsersController {
   authService = new AuthService();
@@ -9,7 +11,11 @@ export class UsersController {
       const userId = req.user.id;
       const user = await this.authService.findUserById(userId);
 
-      return res.status(200).json({ data: user });
+      return res.status(200).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.USERS.READ_ME.SUCCEED,
+        data: user
+      });
     } catch (error) {
       next(error);
     }
