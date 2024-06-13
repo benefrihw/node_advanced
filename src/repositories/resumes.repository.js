@@ -12,5 +12,14 @@ export class ResumeRepository {
             },
         });
         return createdResume;
-    }
+    };
+
+    findAllResumes = async (authorId) => {
+        const resumes = await prisma.resume.findMany({
+            where: {
+                authorId,
+            },
+        });
+        return resumes;
+    };
 }

@@ -5,24 +5,52 @@ import { createResumeValidator } from '../middlewares/validators/create-resume-v
 import { updateResumeValidator } from '../middlewares/validators/updated-resume-validator.middleware.js';
 
 export class ResumeService {
-    resumeRepository = new ResumeRepository();
+  resumeRepository = new ResumeRepository();
 
-    createResume = async (authorId, title, content) => {
-        const createdUser = await this.resumeRepository.createResume(
-            authorId,
-            title,
-            content
-        );
-        return {
-            status: HTTP_STATUS.CREATED,
-            message: MESSAGES.RESUMES.CREATE.SUCCEED,
-            id: createdUser.id,
-            authorId: createdUser.authorId,
-            title: createdUser.title,
-            content: createdUser.content,
-            status: createdUser.status,
-            createdAt: createdUser.createdAt,
-            updatedAt: createdUser.updatedAt,
-        };
+  createResume = async (authorId, title, content) => {
+    const createdUser = await this.resumeRepository.createResume(
+      authorId,
+      title,
+      content,
+    );
+    return {
+      status: HTTP_STATUS.CREATED,
+      message: MESSAGES.RESUMES.CREATE.SUCCEED,
+      id: createdUser.id,
+      authorId: createdUser.authorId,
+      title: createdUser.title,
+      content: createdUser.content,
+      status: createdUser.status,
+      createdAt: createdUser.createdAt,
+      updatedAt: createdUser.updatedAt,
     };
+  };
+
+  findAllResumes = async (authorId) => {
+    const resumes = await this.resumeRepository.findAllResumes(authorId);
+    if (!resumes) {
+      return {
+        status: HTTP_STATUS.NOT_FOUND,
+        message: MESSAGES.RESUMES.NOT_FOUND,
+      };
+    }
+
+    resumes.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+    return resumes.map((resume) => {
+      return {
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+        id: resume.id,
+        authorId: resume.authorId,
+        title: resume.title,
+        content: resume.content,
+        status: resume.status,
+        createdAt: resume.createdAt,
+        updatedAt: resume.updatedAt,
+      };
+    });
+  };
 }

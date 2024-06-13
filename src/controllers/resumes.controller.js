@@ -20,4 +20,19 @@ export class ResumeController {
             next (error);
         };
     };
+
+    getResumes = async (req, res, next) => {
+        try {
+            const user = req.user;
+            const authorId = user.id;
+
+            const resumes = await this.resumeService.findAllResumes(
+                authorId,
+            );
+
+            return res.status(200).json({ date: resumes});
+        } catch (error) {
+            next (error);
+        };
+    };
 }

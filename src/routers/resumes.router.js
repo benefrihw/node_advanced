@@ -38,51 +38,53 @@ resumesRouter.post('/', createResumeValidator, resumeController.createResume);
 //   }
 // });
 
-// 이력서 목록 조회
-resumesRouter.get('/', async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+/** 이력서 목록 조회 API */
+resumesRouter.get('/', resumeController.getResumes);
 
-    let { sort } = req.query;
+// resumesRouter.get('/', async (req, res, next) => {
+//   try {
+//     const user = req.user;
+//     const authorId = user.id;
 
-    sort = sort?.toLowerCase();
+//     let { sort } = req.query;
 
-    if (sort !== 'desc' && sort !== 'asc') {
-      sort = 'desc';
-    }
+//     sort = sort?.toLowerCase();
 
-    let data = await prisma.resume.findMany({
-      where: { authorId },
-      orderBy: {
-        createdAt: sort,
-      },
-      include: {
-        author: true,
-      },
-    });
+//     if (sort !== 'desc' && sort !== 'asc') {
+//       sort = 'desc';
+//     }
 
-    data = data.map((resume) => {
-      return {
-        id: resume.id,
-        authorName: resume.author.name,
-        title: resume.title,
-        content: resume.content,
-        status: resume.status,
-        createdAt: resume.createdAt,
-        updatedAt: resume.updatedAt,
-      };
-    });
+//     let data = await prisma.resume.findMany({
+//       where: { authorId },
+//       orderBy: {
+//         createdAt: sort,
+//       },
+//       include: {
+//         author: true,
+//       },
+//     });
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//     data = data.map((resume) => {
+//       return {
+//         id: resume.id,
+//         authorName: resume.author.name,
+//         title: resume.title,
+//         content: resume.content,
+//         status: resume.status,
+//         createdAt: resume.createdAt,
+//         updatedAt: resume.updatedAt,
+//       };
+//     });
+
+//     return res.status(HTTP_STATUS.OK).json({
+//       status: HTTP_STATUS.OK,
+//       message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
+//       data,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // 이력서 상세 조회
 resumesRouter.get('/:id', async (req, res, next) => {
