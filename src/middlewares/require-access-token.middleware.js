@@ -3,6 +3,9 @@ import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import { ACCESS_TOKEN_SECRET } from '../constants/env.constant.js';
 import { prisma } from '../utils/prisma.util.js';
+import { AuthRepository } from '../repositories/users.repository.js';
+
+const authRepository = new AuthRepository();
 
 export const requireAccessToken = async (req, res, next) => {
   try {
@@ -56,11 +59,14 @@ export const requireAccessToken = async (req, res, next) => {
     }
 
     // Payload에 담긴 사용자 ID와 일치하는 사용자가 없는 경우
+    // prisma가 아닌 Repository에서 처리
     const { id } = payload;
-    const user = await prisma.user.findUnique({
-      where: { id },
-      omit: { password: true },
-    });
+    const user = await authRepository.middlewareById(id);
+    
+    // const user = await prisma.user.findUnique({
+    //   where: { id },
+    //   omit: { password: true },
+    // });
 
     if (!user) {
       return res.status(HTTP_STATUS.UNAUTHORIZED).json({
