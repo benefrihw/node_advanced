@@ -1,37 +1,40 @@
-import { prisma } from '../utils/prisma.util.js'
+import { prisma } from '../utils/prisma.util.js';
 
 export class AuthRepository {
-    findUserById = async (userId) => {
-        const user = await prisma.user.findUnique({
-            where: { id: +userId },
-        });
-        return user;
-    };
+  // 사용자 정보 조회
+  findUserById = async (userId) => {
+    const user = await prisma.user.findUnique({
+      where: { id: +userId },
+    });
+    return user;
+  };
 
-    findUnique = async (email) => {
-        const existedUser = await prisma.user.findUnique({
-            where: { email },
-        });
-        return existedUser;
-    }
+  // email 중복확인
+  findUnique = async (email) => {
+    const existedUser = await prisma.user.findUnique({
+      where: { email },
+    });
+    return existedUser;
+  };
 
-    createUser = async (email, password, name) => {
-        const createdUser = await prisma.user.create({
-            data: {
-                email,
-                password,
-                name,
-            },
-        });
-        return createdUser;
-    };
+  // 회원가입
+  createUser = async (email, password, name) => {
+    const createdUser = await prisma.user.create({
+      data: {
+        email,
+        password,
+        name,
+      },
+    });
+    return createdUser;
+  };
 
-    middlewareById = async (id) => {
-        const user = await prisma.user.findUnique({
-            where: { id },
-            omit: { password: true },
-        });
-        return user;
-    };
-    
+  // 인증 미들웨어
+  middlewareById = async (id) => {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      omit: { password: true },
+    });
+    return user;
+  };
 }

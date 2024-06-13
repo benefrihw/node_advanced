@@ -12,5 +12,4 @@ const usersController = new UsersController();
 /** 내 정보 조회 API */
 usersRouter.get('/me', requireAccessToken, usersController.getUserById);
 
-
 export { usersRouter };

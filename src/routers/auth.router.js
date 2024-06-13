@@ -57,7 +57,6 @@ authRouter.post('/sign-up', signUpValidator, authController.signUpUser);
 //   }
 // });
 
-
 /** 로그인 API */
 authRouter.post('/sign-in', signInValidator, authController.signInUser);
 
