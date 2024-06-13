@@ -15,7 +15,7 @@ export class AuthController {
       return res.status(200).json({
         status: HTTP_STATUS.CREATED,
         message: MESSAGES.AUTH.SIGN_UP.SUCCEED,
-        data: user
+        data: user,
       });
     } catch (error) {
       next(error);
@@ -32,7 +32,7 @@ export class AuthController {
       return res.status(200).json({
         status: HTTP_STATUS.OK,
         message: MESSAGES.AUTH.SIGN_IN.SUCCEED,
-        data: user
+        data: user,
       });
     } catch (error) {
       next(error);

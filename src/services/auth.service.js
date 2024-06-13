@@ -51,6 +51,6 @@ export class AuthService {
     const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
       expiresIn: ACCESS_TOKEN_EXPIRES_IN,
     });
-    return { accessToken: accessToken }
+    return { accessToken: accessToken };
   };
 }
