@@ -169,35 +169,37 @@ resumesRouter.put('/:id', updateResumeValidator, resumeController.updateResume);
 //   }
 // });
 
-// 이력서 삭제
-resumesRouter.delete('/:id', async (req, res, next) => {
-  try {
-    const user = req.user;
-    const authorId = user.id;
+/** 이력서 삭제 API */
+resumesRouter.delete('/:id', resumeController.deleteResume);
 
-    const { id } = req.params;
+// resumesRouter.delete('/:id', async (req, res, next) => {
+//   try {
+//     const user = req.user;
+//     const authorId = user.id;
 
-    let existedResume = await prisma.resume.findUnique({
-      where: { id: +id, authorId },
-    });
+//     const { id } = req.params;
 
-    if (!existedResume) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({
-        status: HTTP_STATUS.NOT_FOUND,
-        message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-      });
-    }
+//     let existedResume = await prisma.resume.findUnique({
+//       where: { id: +id, authorId },
+//     });
 
-    const data = await prisma.resume.delete({ where: { id: +id, authorId } });
+//     if (!existedResume) {
+//       return res.status(HTTP_STATUS.NOT_FOUND).json({
+//         status: HTTP_STATUS.NOT_FOUND,
+//         message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
+//       });
+//     }
 
-    return res.status(HTTP_STATUS.OK).json({
-      status: HTTP_STATUS.OK,
-      message: MESSAGES.RESUMES.DELETE.SUCCEED,
-      data: { id: data.id },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//     const data = await prisma.resume.delete({ where: { id: +id, authorId } });
+
+//     return res.status(HTTP_STATUS.OK).json({
+//       status: HTTP_STATUS.OK,
+//       message: MESSAGES.RESUMES.DELETE.SUCCEED,
+//       data: { id: data.id },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 export { resumesRouter };

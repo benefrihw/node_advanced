@@ -67,4 +67,21 @@ export class ResumeController {
         next (error);
     };
   };
+
+  deleteResume = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const authorId = user.id;
+        const { id } = req.params;
+
+        const resume = await this.resumeService.deleteResume(
+            authorId,
+            id,
+        );
+        
+        return res.status(200).json({ data: resume });
+    } catch (error) {
+        next (error);
+    };
+  };
 }

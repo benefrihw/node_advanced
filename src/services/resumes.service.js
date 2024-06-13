@@ -109,4 +109,23 @@ export class ResumeService {
       updatedAt: resume.updatedAt,
     };
   };
+
+  deleteResume = async (authorId, id) => {
+    const resume = await this.resumeRepository.deleteResume(
+        authorId,
+        id,
+    );
+    if (!resume) {
+        return {
+          status: HTTP_STATUS.NOT_FOUND,
+          message: MESSAGES.RESUMES.NOT_FOUND,
+        };
+      };
+
+      return {
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.RESUMES.DELETE.SUCCEED,
+        id: resume.id,
+      };
+  };
 }

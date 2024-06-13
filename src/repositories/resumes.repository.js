@@ -46,4 +46,14 @@ export class ResumeRepository {
     });
     return updatedResume;
     };
+
+    deleteResume = async (authorId, id) => {
+        const deletedResume = await prisma.resume.delete({
+            where: {
+                authorId: +authorId,
+                id: +id,
+            },
+        });
+        return deletedResume;
+    };
   }
